@@ -1,0 +1,75 @@
+package com.viveris.banking;
+
+import java.util.List;
+import java.util.Map;
+
+public class BankAccount {
+    // TODO: déclarer les attributs (titulaire, solde, historique)
+    private final String name;
+    private Double balance;
+    private final List<Operation> history;
+
+    // TODO: constructeur — valider le nom et le solde initial
+    public BankAccount(String name, double balance, List<Operation> history) {
+        this.name = name;
+        this.balance = balance;
+        this.history = history;
+    }
+
+    /**
+     * Dépose un montant sur le compte.
+     *
+     * @param amount montant à déposer (doit être > 0)
+     * @throws IllegalArgumentException si le montant est invalide
+     */
+    public void deposit(Double amount) throws IllegalArgumentException {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
+        }
+        this.balance += amount;
+        Operation deposit = new Operation(OperationType.DEPOSIT, amount);
+        this.history.add(deposit);
+    }
+
+    /**
+     * Retire un montant du compte.
+     *
+     * @param amount montant à retirer (doit être > 0)
+     * @throws IllegalArgumentException si le montant est invalide
+     * @throws InsufficientFundsException si le solde est insuffisant
+     */
+    public void withdraw(double amount) throws InsufficientFundsException {
+        if (amount < 0 ) {
+            throw new IllegalArgumentException("Amount cannot be negative");
+        } else if (amount > balance) {
+            throw new InsufficientFundsException();
+        }
+        this.balance -= amount;
+        Operation withdraw = new Operation(OperationType.WITHDRAWAL, amount);
+        history.add(withdraw);
+    }
+
+    /**
+     * Retourne le solde actuel.
+     */
+    public double getBalance() {
+        return balance;
+    }
+
+    /**
+     * Retourne une vue non modifiable de l'historique des opérations.
+     */
+    public List<Operation> getHistory() {
+        return history;
+    }
+
+    // TODO: toString() optionnel
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "name='" + name + '\'' +
+                ", balance=" + balance +
+                ", history=" + history +
+                '}';
+    }
+}
