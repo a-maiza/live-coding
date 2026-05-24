@@ -7,7 +7,7 @@ public class Operation {
     private final double amount;
 
     // TODO: constructeur
-    public Operation(OperationType operationType, double amount) {
+    public Operation(OperationType operationType, Double amount) {
         this.operationType = operationType;
         this.amount = amount;
     }
@@ -17,7 +17,7 @@ public class Operation {
         return operationType;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 

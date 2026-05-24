@@ -15,6 +15,9 @@ public class BankAccount {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("name cannot be null or blank");
         }
+        if (balance == null || balance < 0) {
+            throw new IllegalArgumentException("balance cannot be negative");
+        }
         this.name = name;
         this.balance = balance;
         this.history = new ArrayList<>();
@@ -26,8 +29,8 @@ public class BankAccount {
      * @param amount montant à déposer (doit être > 0)
      * @throws IllegalArgumentException si le montant est invalide
      */
-    public void deposit(Double amount) throws IllegalArgumentException {
-        if (amount < 0) {
+    public void deposit(Double amount) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("Amount cannot be negative");
         }
         this.balance += amount;
@@ -42,8 +45,8 @@ public class BankAccount {
      * @throws IllegalArgumentException si le montant est invalide
      * @throws InsufficientFundsException si le solde est insuffisant
      */
-    public void withdraw(double amount) throws InsufficientFundsException {
-        if (amount < 0 ) {
+    public void withdraw(Double amount) throws InsufficientFundsException {
+        if (amount <= 0 ) {
             throw new IllegalArgumentException("Amount cannot be negative");
         } else if (amount > balance) {
             throw new InsufficientFundsException("Solde insuffisant : solde=" + balance + ", retrait demandé=" + amount);
@@ -56,7 +59,7 @@ public class BankAccount {
     /**
      * Retourne le solde actuel.
      */
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 

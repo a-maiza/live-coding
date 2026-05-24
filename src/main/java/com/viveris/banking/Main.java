@@ -1,7 +1,5 @@
 package com.viveris.banking;
 
-import java.util.ArrayList;
-
 public class Main {
 
     public static void main(String[] args) throws InsufficientFundsException {
@@ -10,7 +8,7 @@ public class Main {
         //   - déposer de l'argent
         //   - retirer de l'argent
         //   - afficher le solde et l'historique
-        BankAccount bankAccount = new BankAccount("maiza", 0.0);
+        BankAccount bankAccount = new BankAccount("maiza", 100.0);
         bankAccount.deposit(1000.0);
         bankAccount.withdraw(100.0);
         bankAccount.getHistory().forEach(System.out::println);
