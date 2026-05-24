@@ -1,7 +1,8 @@
 package com.viveris.banking;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class BankAccount {
     // TODO: déclarer les attributs (titulaire, solde, historique)
@@ -10,10 +11,13 @@ public class BankAccount {
     private final List<Operation> history;
 
     // TODO: constructeur — valider le nom et le solde initial
-    public BankAccount(String name, double balance, List<Operation> history) {
+    public BankAccount(String name, Double balance) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name cannot be null or blank");
+        }
         this.name = name;
         this.balance = balance;
-        this.history = history;
+        this.history = new ArrayList<>();
     }
 
     /**
@@ -42,7 +46,7 @@ public class BankAccount {
         if (amount < 0 ) {
             throw new IllegalArgumentException("Amount cannot be negative");
         } else if (amount > balance) {
-            throw new InsufficientFundsException();
+            throw new InsufficientFundsException("Solde insuffisant : solde=" + balance + ", retrait demandé=" + amount);
         }
         this.balance -= amount;
         Operation withdraw = new Operation(OperationType.WITHDRAWAL, amount);
@@ -60,7 +64,7 @@ public class BankAccount {
      * Retourne une vue non modifiable de l'historique des opérations.
      */
     public List<Operation> getHistory() {
-        return history;
+        return Collections.unmodifiableList(history);
     }
 
     // TODO: toString() optionnel
