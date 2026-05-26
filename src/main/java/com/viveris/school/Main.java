@@ -10,10 +10,11 @@ public class Main {
         //   - afficher la note la plus haute et la plus basse
         //   - afficher les matières en échec
         Student student1 = new Student("abdel");
-        student1.getGrades().add(new Grade("physics", 13));
-        student1.getGrades().add(new Grade("chemistry", 14));
-        student1.getGrades().add(new Grade("physics", 15));
-        student1.getGrades().add(new Grade("chemistry", 16));
+        student1.addGrade(new Grade("physics", 13));
+        student1.addGrade(new Grade("chemistry", 14));
+        student1.addGrade(new Grade("math", 15));
+        student1.addGrade(new Grade("philo", 16));
+        student1.addGrade(new Grade("geo", 5));
 
         System.out.println("Moyenne : " + student1.getAverage());
         System.out.println("HighestGrade : " + student1.getHighestGrade());
