@@ -10,8 +10,8 @@ public class Student {
     // TODO: constructeur — valider le nom
 
     public Student(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name is null");
+        if (name.isBlank()) {
+            throw new IllegalArgumentException();
         }
         this.name = name;
         this.grades = new ArrayList<>();
