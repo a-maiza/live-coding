@@ -2,22 +2,60 @@ package com.viveris.banking;
 
 public class Main {
 
-    public static void main(String[] args) throws InsufficientFundsException {
-        // TODO: tester les cas nominaux
-        //   - créer un compte avec un solde initial
-        //   - déposer de l'argent
-        //   - retirer de l'argent
-        //   - afficher le solde et l'historique
-        BankAccount bankAccount = new BankAccount("maiza", 100.0);
-        bankAccount.deposit(1000.0);
-        bankAccount.withdraw(100.0);
-        bankAccount.getHistory().forEach(System.out::println);
+    public static void main(String[] args) {
+        // --- Cas nominal ---
+        BankAccount account = new BankAccount("Maiza", 100.0);
+        account.deposit(1000.0);
+        try {
+            account.withdraw(200.0);
+        } catch (InsufficientFundsException e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
+        }
+        System.out.println("Solde : " + account.getBalance());
+        account.getHistory().forEach(System.out::println);
 
-        // TODO: tester les cas limites
-        //   - retrait supérieur au solde
-        //   - montant négatif ou zéro
-        //   - nom null ou vide
-        bankAccount.withdraw(10000.0);
-        bankAccount.deposit(-5.0);
+        System.out.println("---");
+
+        // --- Retrait supérieur au solde ---
+        try {
+            account.withdraw(10000.0);
+        } catch (InsufficientFundsException e) {
+            System.out.println("Caught InsufficientFundsException : " + e.getMessage());
+        }
+
+        // --- Montant invalide (zéro) ---
+        try {
+            account.deposit(0.0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught IllegalArgumentException (dépôt 0) : " + e.getMessage());
+        }
+
+        // --- Montant invalide (négatif) ---
+        try {
+            account.deposit(-5.0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught IllegalArgumentException (dépôt négatif) : " + e.getMessage());
+        }
+
+        // --- Nom invalide ---
+        try {
+            new BankAccount("", 100.0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught IllegalArgumentException (nom vide) : " + e.getMessage());
+        }
+
+        // --- Solde initial négatif ---
+        try {
+            new BankAccount("Dupont", -50.0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught IllegalArgumentException (solde négatif) : " + e.getMessage());
+        }
+
+        // --- Vérifier que l'historique est non modifiable ---
+        try {
+            account.getHistory().clear();
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Caught UnsupportedOperationException : historique bien protégé");
+        }
     }
 }
