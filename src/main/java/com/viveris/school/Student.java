@@ -4,14 +4,12 @@ import java.util.*;
 
 public class Student {
 
-    // TODO: attributs (nom, liste de notes)
     private final String name;
     private final List<Grade> grades;
-    // TODO: constructeur — valider le nom
 
     public Student(String name) {
-        if (name.isBlank()) {
-            throw new IllegalArgumentException();
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Student name is null or blank");
         }
         this.name = name;
         this.grades = new ArrayList<>();
@@ -58,11 +56,10 @@ public class Student {
      * Retourne Optional.empty() si aucune note n'existe.
      */
     public Optional<Grade> getLowestGrade() {
-        // TODO
         return grades.stream().min(Comparator.comparingDouble(Grade::getNote));
     }
 
-    boolean alreadyExisted(String matter) {
+    private boolean alreadyExisted(String matter) {
         return grades.stream().anyMatch(grade -> grade.getMatter().equals(matter));
     }
 
@@ -76,7 +73,6 @@ public class Student {
                 .toList();
     }
 
-    // TODO: getter pour le nom
     public String getName() {
         return name;
     }
@@ -84,8 +80,6 @@ public class Student {
     public List<Grade> getGrades() {
         return Collections.unmodifiableList(grades);
     }
-
-    // TODO: toString()
 
     @Override
     public String toString() {

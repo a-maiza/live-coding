@@ -34,8 +34,13 @@ public class Main {
         //   - note invalide (< 0 ou > 20)
         //   - nom null ou vide
         Student student2 = new Student("léo");
-        System.out.println("Moyenne : " + student1.getAverage());
-        System.out.println("HighestGrade : " + student1.getHighestGrade());
-        System.out.println("LowestGrade : " + student1.getLowestGrade());
+        System.out.println(student2.getName() + "Moyenne : " + student2.getAverage());
+        System.out.println(student2.getName() + "HighestGrade : " + student2.getHighestGrade());
+        System.out.println(student2.getName() + "LowestGrade : " + student2.getLowestGrade());
+        student2.addGrade(new Grade("physics", 13));
+        student2.addGrade(new Grade("chemistry", 14));
+        student2.addGrade(new Grade("chemistry", -5));
+
+        Student student3 = new Student("");
     }
 }
