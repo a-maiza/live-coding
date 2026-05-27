@@ -1,16 +1,25 @@
 package com.viveris.product.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "products")
 public class Product {
 
-    private final Long id;
-    private final String name;
-    private final double price;
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private Long id;
 
-    public Product(Long id, String name, double price) {
-        if (name == null || name.isEmpty() || price <= 0) {
-            throw new IllegalArgumentException();
-        }
-        this.id = id;
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @Column(nullable = false)
+    private double price;
+
+    public Product() {
+    }
+
+    public Product(String name, double price) {
         this.name = name;
         this.price = price;
     }
@@ -23,8 +32,16 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override

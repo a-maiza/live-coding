@@ -1,25 +1,28 @@
 package com.viveris.product.services;
 
-import com.viveris.product.model.Product;
 import com.viveris.product.dto.ProductRequest;
 import com.viveris.product.exception.ProductNotFoundException;
+import com.viveris.product.model.Product;
+import com.viveris.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProductService {
 
-    private Map<Long, Product> products = new HashMap<>();
-    private final AtomicLong idCounter = new AtomicLong(1);
+    // Plus de Map ni AtomicLong — la base de données gère tout
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     /**
      * Retourne tous les produits.
      */
     public List<Product> findAll() {
-        return products.values().stream().toList();
+        return productRepository.findAll();
     }
 
     /**
@@ -28,22 +31,18 @@ public class ProductService {
      * @throws ProductNotFoundException si le produit n'existe pas
      */
     public Product findById(Long id) {
-        Product product = products.get(id);
-        if (product == null) {
-            throw new ProductNotFoundException(id);
-        }
-        return product;
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     /**
-     * Crée un nouveau produit à partir du DTO reçu.
-     * L'id est auto-généré.
+     * Crée un nouveau produit.
+     * L'id est généré automatiquement par la base.
      */
     public Product create(ProductRequest request) {
-        Long id = idCounter.getAndIncrement();
-        Product product = new Product(id, request.getName(), request.getPrice());
-        products.put(id, product);
-        return product;
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        return productRepository.save(product);
     }
 
     /**
@@ -52,10 +51,10 @@ public class ProductService {
      * @throws ProductNotFoundException si le produit n'existe pas
      */
     public Product update(Long id, ProductRequest request) {
-        Product product = findById(id);
-        Product updated =  new Product(id, request.getName(), request.getPrice());
-        products.put(id, updated);
-        return product;
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        return productRepository.save(product);
     }
 
     /**
@@ -63,11 +62,8 @@ public class ProductService {
      *
      * @throws ProductNotFoundException si le produit n'existe pas
      */
-    public Product delete(Long id) {
-        if (this.products.containsKey(id)) {
-            return this.products.remove(id);
-        }else {
-            throw new ProductNotFoundException(id);
-        }
+    public void delete(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        productRepository.delete(product);
     }
 }
