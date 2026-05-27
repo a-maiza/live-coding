@@ -1,7 +1,7 @@
 package com.viveris.product.services;
 
 import com.viveris.product.model.Product;
-import com.viveris.product.ProductRequest;
+import com.viveris.product.dto.ProductRequest;
 import com.viveris.product.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +53,8 @@ public class ProductService {
      */
     public Product update(Long id, ProductRequest request) {
         Product product = findById(id);
-        products.put(id, product);
+        Product updated =  new Product(id, request.getName(), request.getPrice());
+        products.put(id, updated);
         return product;
     }
 

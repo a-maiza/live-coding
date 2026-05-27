@@ -1,7 +1,6 @@
 package com.viveris.product.controller;
 
-import com.viveris.product.ProductRequest;
-import com.viveris.product.exception.ProductNotFoundException;
+import com.viveris.product.dto.ProductRequest;
 import com.viveris.product.model.Product;
 import com.viveris.product.services.ProductService;
 import jakarta.validation.Valid;

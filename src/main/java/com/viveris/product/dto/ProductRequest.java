@@ -1,4 +1,4 @@
-package com.viveris.product;
+package com.viveris.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

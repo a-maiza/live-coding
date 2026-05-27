@@ -27,7 +27,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
         // TODO: extraire le premier message d'erreur et le retourner en 400
-        String message = ex.getBindingResult().getFieldError().getDefaultMessage();
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .map(e -> e.getField() + " : " + e.getDefaultMessage())
+                .findFirst()
+                .orElse("Requête invalide");
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(message);
