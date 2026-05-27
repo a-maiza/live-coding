@@ -1,7 +1,11 @@
-package com.viveris.product;
+package com.viveris.product.controller;
 
+import com.viveris.product.ProductRequest;
+import com.viveris.product.exception.ProductNotFoundException;
+import com.viveris.product.model.Product;
+import com.viveris.product.services.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +27,8 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<List<Product>> getAll() {
-        return ResponseEntity.ok(productService.findAll());
+        return ResponseEntity
+                .ok(productService.findAll());
     }
 
     /**
@@ -32,11 +37,8 @@ public class ProductController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getById(@PathVariable Long id) {
-        Product product = productService.findById(id);
-        if (product == null) {
-            throw new ProductNotFoundException("the product dosn't exite", id);
-        }
-        return ResponseEntity.ok(product);
+        return ResponseEntity
+                .ok(productService.findById(id));
     }
 
     /**
@@ -45,7 +47,9 @@ public class ProductController {
      */
     @PostMapping
     public ResponseEntity<Product> create(@Valid @RequestBody ProductRequest request) {
-        return ResponseEntity.ok(productService.create(request));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(productService.create(request));
     }
 
     /**
@@ -55,11 +59,8 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id,
                                           @Valid @RequestBody ProductRequest request) {
-        Product product = productService.findById(id);
-        if (product == null) {
-            throw new ProductNotFoundException("the product doesn't exite", id);
-        }
-        return ResponseEntity.ok(productService.update(id, request));
+        return ResponseEntity
+                .ok(productService.update(id, request));
     }
 
     /**
@@ -68,11 +69,7 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Product deleted = productService.delete(id);
-
-        if (deleted == null) {
-            throw new ProductNotFoundException("the product doesn't exite", id);
-        }
+        productService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

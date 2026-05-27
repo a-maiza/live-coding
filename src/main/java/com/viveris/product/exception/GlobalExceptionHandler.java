@@ -1,4 +1,4 @@
-package com.viveris.product;
+package com.viveris.product.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
         // TODO: extraire le premier message d'erreur et le retourner en 400
-        String message = ex.getBindingResult()
-                .getFieldError()
-                .getDefaultMessage();
+        String message = ex.getBindingResult().getFieldError().getDefaultMessage();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(message);

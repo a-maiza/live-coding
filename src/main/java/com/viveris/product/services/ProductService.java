@@ -1,5 +1,8 @@
-package com.viveris.product;
+package com.viveris.product.services;
 
+import com.viveris.product.model.Product;
+import com.viveris.product.ProductRequest;
+import com.viveris.product.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class ProductService {
 
-    Map<Long, Product> products = new HashMap<>();
+    private Map<Long, Product> products = new HashMap<>();
     private final AtomicLong idCounter = new AtomicLong(1);
     /**
      * Retourne tous les produits.
@@ -25,7 +28,11 @@ public class ProductService {
      * @throws ProductNotFoundException si le produit n'existe pas
      */
     public Product findById(Long id) {
-        return products.get(id);
+        Product product = products.get(id);
+        if (product == null) {
+            throw new ProductNotFoundException(id);
+        }
+        return product;
     }
 
     /**
@@ -45,7 +52,7 @@ public class ProductService {
      * @throws ProductNotFoundException si le produit n'existe pas
      */
     public Product update(Long id, ProductRequest request) {
-        Product product = new Product(id, request.getName(), request.getPrice());
+        Product product = findById(id);
         products.put(id, product);
         return product;
     }
@@ -59,7 +66,7 @@ public class ProductService {
         if (this.products.containsKey(id)) {
             return this.products.remove(id);
         }else {
-            throw new ProductNotFoundException("product not found", id);
+            throw new ProductNotFoundException(id);
         }
     }
 }

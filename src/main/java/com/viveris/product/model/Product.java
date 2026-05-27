@@ -1,4 +1,4 @@
-package com.viveris.product;
+package com.viveris.product.model;
 
 public class Product {
 
