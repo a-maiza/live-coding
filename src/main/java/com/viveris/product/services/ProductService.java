@@ -39,9 +39,7 @@ public class ProductService {
      * L'id est généré automatiquement par la base.
      */
     public Product create(ProductRequest request) {
-        Product product = new Product();
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
+        Product product = new Product(request.getName(), request.getPrice());
         return productRepository.save(product);
     }
 
@@ -51,7 +49,7 @@ public class ProductService {
      * @throws ProductNotFoundException si le produit n'existe pas
      */
     public Product update(Long id, ProductRequest request) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        Product product = findById(id);
         product.setName(request.getName());
         product.setPrice(request.getPrice());
         return productRepository.save(product);
@@ -64,6 +62,6 @@ public class ProductService {
      */
     public void delete(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        productRepository.delete(product);
+        productRepository.deleteById(id);
     }
 }
