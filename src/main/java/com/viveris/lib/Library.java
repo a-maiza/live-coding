@@ -1,15 +1,12 @@
 package com.viveris.lib;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Library {
     private final Map<String, Book> books;
 
-    public Library(Map<String, Book> books) {
-        this.books = books;
+    public Library() {
+        this.books = new HashMap<>();
     }
 
     public void addBook(Book book){
@@ -19,23 +16,23 @@ public class Library {
         this.books.put(book.getTitle(), book);
     }
 
-    public Book borrowBook(Book book){
-        if (!this.books.containsKey(book.getTitle())){
+    public Book borrowBook(String titre){
+        if (!this.books.containsKey(titre)){
             throw new BookNotFoundException("book does not exist");
-        } else if (books.get(book.getTitle()).getStatus() == Status.BORROWED) {
+        } else if (books.get(titre).getStatus() == Status.BORROWED) {
             throw new BookNotAvailableException("book is borrowed");
         }
-        books.get(book.getTitle()).setStatus(Status.BORROWED);
-        return books.get(book.getTitle());
+        books.get(titre).setStatus(Status.BORROWED);
+        return books.get(titre);
     }
 
-    public void returnBook(Book book){
-        if (!this.books.containsKey(book.getTitle())){
+    public void returnBook(String titre){
+        if (!this.books.containsKey(titre)){
             throw new BookNotFoundException("book does not exist");
-        } else if (books.get(book.getTitle()).getStatus() == Status.AVAILABLE){
+        } else if (books.get(titre).getStatus() == Status.AVAILABLE){
             throw new IllegalArgumentException("book already returned");
         }
-        books.get(book.getTitle()).setStatus(Status.AVAILABLE);
+        books.get(titre).setStatus(Status.AVAILABLE);
     }
 
     public List<Book> listBooks(Map<String, Book> books){
