@@ -1,7 +1,7 @@
 package com.viveris.product.controller;
 
 import com.viveris.product.dto.ProductRequest;
-import com.viveris.product.model.Product;
+import com.viveris.product.dto.ProductResponse;
 import com.viveris.product.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,52 +20,27 @@ public class ProductController {
         this.productService = productService;
     }
 
-    /**
-     * GET /api/products
-     * Retourne la liste de tous les produits — HTTP 200
-     */
     @GetMapping
-    public ResponseEntity<List<Product>> getAll() {
-        return ResponseEntity
-                .ok(productService.findAll());
+    public ResponseEntity<List<ProductResponse>> getAll() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
-    /**
-     * GET /api/products/{id}
-     * Retourne un produit par son id — HTTP 200 ou 404
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getById(@PathVariable Long id) {
-        return ResponseEntity
-                .ok(productService.findById(id));
+    public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findById(id));
     }
 
-    /**
-     * POST /api/products
-     * Crée un produit — HTTP 201 Created
-     */
     @PostMapping
-    public ResponseEntity<Product> create(@Valid @RequestBody ProductRequest request) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(productService.create(request));
+    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(request));
     }
 
-    /**
-     * PUT /api/products/{id}
-     * Met à jour un produit — HTTP 200 ou 404
-     */
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id,
-                                          @Valid @RequestBody ProductRequest request) {
-        return ResponseEntity
-                .ok(productService.update(id, request));
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id,
+                                                   @Valid @RequestBody ProductRequest request) {
+        return ResponseEntity.ok(productService.update(id, request));
     }
 
-    /**
-     * DELETE /api/products/{id}
-     * Supprime un produit — HTTP 204 No Content ou 404
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);

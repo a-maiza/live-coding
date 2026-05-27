@@ -1,8 +1,9 @@
 package com.viveris.product.services;
 
 import com.viveris.product.dto.ProductRequest;
+import com.viveris.product.dto.ProductResponse;
+import com.viveris.product.entity.Product;
 import com.viveris.product.exception.ProductNotFoundException;
-import com.viveris.product.model.Product;
 import com.viveris.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,48 +12,56 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    // Plus de Map ni AtomicLong — la base de données gère tout
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    /**
-     * Retourne tous les produits.
-     */
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    // -------------------------------------------------------
+    // Mapping : Entity → DTO de réponse
+    // Le service est le seul responsable de cette conversion
+    // -------------------------------------------------------
+    private ProductResponse toResponse(Product product) {
+        // TODO: construire et retourner un ProductResponse depuis l'entité Product
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice());
     }
 
     /**
-     * Retourne un produit par son id.
+     * Retourne tous les produits sous forme de DTO.
+     */
+    public List<ProductResponse> findAll() {
+        return productRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    /**
+     * Retourne un produit par son id sous forme de DTO.
      *
      * @throws ProductNotFoundException si le produit n'existe pas
      */
-    public Product findById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+    public ProductResponse findById(Long id) {
+        Product product = getEntityById(id);
+        return toResponse(product);
     }
 
     /**
-     * Crée un nouveau produit.
-     * L'id est généré automatiquement par la base.
+     * Crée un nouveau produit et retourne le DTO.
      */
-    public Product create(ProductRequest request) {
+    public ProductResponse create(ProductRequest request) {
         Product product = new Product(request.getName(), request.getPrice());
-        return productRepository.save(product);
+        return toResponse(productRepository.save(product));
     }
 
     /**
-     * Met à jour un produit existant.
+     * Met à jour un produit existant et retourne le DTO.
      *
      * @throws ProductNotFoundException si le produit n'existe pas
      */
-    public Product update(Long id, ProductRequest request) {
-        Product product = findById(id);
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        return productRepository.save(product);
+    public ProductResponse update(Long id, ProductRequest request) {
+        Product updated = getEntityById(id);
+        updated.setName(request.getName());
+        updated.setPrice(request.getPrice());
+        return toResponse(productRepository.save(updated));
     }
 
     /**
@@ -61,7 +70,15 @@ public class ProductService {
      * @throws ProductNotFoundException si le produit n'existe pas
      */
     public void delete(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        getEntityById(id);
         productRepository.deleteById(id);
+    }
+
+    // -------------------------------------------------------
+    // Usage interne uniquement : retourne l'entité brute
+    // -------------------------------------------------------
+    private Product getEntityById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
