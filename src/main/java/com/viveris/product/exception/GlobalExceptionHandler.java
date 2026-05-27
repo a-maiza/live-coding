@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.stream.Collectors;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -40,8 +42,7 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(e -> e.getField() + " : " + e.getDefaultMessage())
-                .findFirst()
-                .orElse("requete invalide");
+                .collect(Collectors.joining(","));
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -57,7 +58,7 @@ public class GlobalExceptionHandler {
         // TODO: retourner 400 avec message "Corps de la requête manquant ou invalide"
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST, "Corps de la requête manquant ou invalide"));
     }
 
     /**
@@ -69,9 +70,10 @@ public class GlobalExceptionHandler {
         // TODO: construire un message du type :
         //       "Paramètre '" + ex.getName() + "' invalide : valeur '" + ex.getValue() + "'"
         //       et retourner un 400
+        String message = "Paramètre '" + ex.getName() + "' invalide : valeur '" + ex.getValue() + "'";
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST, message));
     }
 
     /**
@@ -96,7 +98,7 @@ public class GlobalExceptionHandler {
         //       Ne pas exposer le message technique de Hibernate (ex.getMessage() contient des détails SQL)
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(ErrorResponse.of(HttpStatus.CONFLICT, ex.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.CONFLICT, "Conflit : une ressource avec ces données existe déjà"));
     }
 
     /**
