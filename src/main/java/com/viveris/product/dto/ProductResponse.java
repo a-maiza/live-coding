@@ -4,13 +4,4 @@ package com.viveris.product.dto;
 // Ne contient que ce que le client a le droit de voir
 // Aucune annotation JPA — complètement découplé de la base de données
 public record ProductResponse(Long id, String name, double price) {
-
-    @Override
-    public String toString() {
-        return "ProductResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }
