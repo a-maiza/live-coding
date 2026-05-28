@@ -5,37 +5,18 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-// DTO spécifique aux produits alimentaires
-// Hérite de ProductRequest (name, price, type)
 public class FoodProductRequest extends ProductRequest {
 
-    // TODO: attribut expiryDate — @NotNull + @Future (la date doit être dans le futur)
-    // TODO: attribut organic — booléen (pas de validation obligatoire)
-    @NotNull
-    @Future
+    @NotNull(message = "La date d'expiration est obligatoire")
+    @Future(message = "La date d'expiration doit être dans le futur")
     private LocalDate expiryDate;
 
-    private Boolean organic;
+    private boolean organic;
 
-    // TODO: constructeur vide
-    public FoodProductRequest() {
-    }
+    public FoodProductRequest() {}
 
-    // TODO: getters + setters
-
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(LocalDate expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public Boolean getOrganic() {
-        return organic;
-    }
-
-    public void setOrganic(Boolean organic) {
-        this.organic = organic;
-    }
+    public LocalDate getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
+    public boolean isOrganic() { return organic; }
+    public void setOrganic(boolean organic) { this.organic = organic; }
 }

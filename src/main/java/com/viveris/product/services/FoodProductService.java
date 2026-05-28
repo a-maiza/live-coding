@@ -20,49 +20,55 @@ public class FoodProductService implements TypedProductService {
         this.repository = repository;
     }
 
-    private FoodProductResponse toResponse(FoodProduct entity) {
-        // TODO: construire et retourner un FoodProductResponse depuis l'entité
-        return new FoodProductResponse(entity.getId(), entity.getName(), entity.getPrice(), entity.getType(), entity.getExpiryDate(), entity.isOrganic());
+    private ProductResponse toResponse(FoodProduct entity) {
+        return new FoodProductResponse(
+                entity.getId(),
+                entity.getName(),
+                entity.getPrice(),
+                entity.getExpiryDate(),
+                entity.isOrganic()
+        );
     }
 
     @Override
     public ProductResponse create(ProductRequest request) {
-        // TODO: caster request en FoodProductRequest
-        //       construire une FoodProduct, sauvegarder, convertir
-        FoodProductRequest fp = (FoodProductRequest)  request;
-        FoodProduct foodProduct = new FoodProduct(fp.getName(),fp.getPrice(), fp.getType(), fp.getExpiryDate(), fp.getOrganic());
-        return toResponse(repository.save(foodProduct));
+        FoodProductRequest fp = (FoodProductRequest) request;
+        FoodProduct entity = new FoodProduct(
+                fp.getName(),
+                fp.getPrice(),
+                fp.getExpiryDate(),
+                fp.isOrganic()
+        );
+        return toResponse(repository.save(entity));
     }
 
     @Override
     public ProductResponse update(Long id, ProductRequest request) {
-        // TODO: récupérer l'entité, modifier les champs, sauvegarder, convertir
-        FoodProduct updated = getEntityById(id);
-        FoodProductRequest fp = (FoodProductRequest)  request;
-        updated.setName(fp.getName());
-        updated.setPrice(fp.getPrice());
-        updated.setExpiryDate(fp.getExpiryDate());
-        updated.setOrganic(fp.getOrganic());
-        return toResponse(repository.save(updated));
+        FoodProduct entity = getEntityById(id);
+        FoodProductRequest fp = (FoodProductRequest) request;
+        entity.setName(fp.getName());
+        entity.setPrice(fp.getPrice());
+        entity.setExpiryDate(fp.getExpiryDate());
+        entity.setOrganic(fp.isOrganic());
+        return toResponse(repository.save(entity));
     }
 
     @Override
     public void delete(Long id) {
-        // TODO: vérifier l'existence, supprimer
-        FoodProduct entity = getEntityById(id);
-        repository.delete(entity);
+        getEntityById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<ProductResponse> findAll() {
-        // TODO: retourner tous les produits alimentaires convertis en DTO
-        return repository.findAll().stream().map(foodProduct -> toResponse(foodProduct)).toList();
+        return repository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Override
     public ProductResponse findById(Long id) {
-        // TODO: récupérer par id, lever ProductNotFoundException si absent
-        return null;
+        return toResponse(getEntityById(id));
     }
 
     private FoodProduct getEntityById(Long id) {

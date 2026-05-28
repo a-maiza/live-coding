@@ -20,40 +20,55 @@ public class ElectronicProductService implements TypedProductService {
         this.repository = repository;
     }
 
-    // Mapping entity → DTO de réponse
-    private ElectronicProductResponse toResponse(ElectronicProduct entity) {
-        // TODO: construire et retourner un ElectronicProductResponse depuis l'entité
-        return null;
+    private ProductResponse toResponse(ElectronicProduct entity) {
+        return new ElectronicProductResponse(
+                entity.getId(),
+                entity.getName(),
+                entity.getPrice(),
+                entity.getBrand(),
+                entity.getWarrantyMonths()
+        );
     }
 
     @Override
     public ProductResponse create(ProductRequest request) {
-        // TODO: caster request en ElectronicProductRequest
-        //       construire une ElectronicProduct, sauvegarder, convertir
-        return null;
+        ElectronicProductRequest ep = (ElectronicProductRequest) request;
+        ElectronicProduct entity = new ElectronicProduct(
+                ep.getName(),
+                ep.getPrice(),
+                ep.getBrand(),
+                ep.getWarrantyMonths()
+        );
+        return toResponse(repository.save(entity));
     }
 
     @Override
     public ProductResponse update(Long id, ProductRequest request) {
-        // TODO: récupérer l'entité, modifier les champs, sauvegarder, convertir
-        return null;
+        ElectronicProduct entity = getEntityById(id);
+        ElectronicProductRequest ep = (ElectronicProductRequest) request;
+        entity.setName(ep.getName());
+        entity.setPrice(ep.getPrice());
+        entity.setBrand(ep.getBrand());
+        entity.setWarrantyMonths(ep.getWarrantyMonths());
+        return toResponse(repository.save(entity));
     }
 
     @Override
     public void delete(Long id) {
-        // TODO: vérifier l'existence, supprimer
+        getEntityById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<ProductResponse> findAll() {
-        // TODO: retourner tous les produits électroniques convertis en DTO
-        return null;
+        return repository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Override
     public ProductResponse findById(Long id) {
-        // TODO: récupérer par id, lever ProductNotFoundException si absent
-        return null;
+        return toResponse(getEntityById(id));
     }
 
     private ElectronicProduct getEntityById(Long id) {
